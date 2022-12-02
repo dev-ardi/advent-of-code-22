@@ -3,16 +3,46 @@
 use std::cmp::max;
 
 fn main() {
-    println!("{}", day1());
+    println!("{}", day2());
 }
 
+fn day2() -> String {
+    let data = include_str!("./day2.txt");
 
 
+    let mut total = 0;
+    for i in data.lines() {
+        let mut line = i.chars();
+
+        match line.nth(0).unwrap() {
+            'A' => match line.nth(1).unwrap() {
+                'X' => total += 3 + 1,
+                'Y' => total += 6 + 2,
+                'Z' => total += 0 + 3,
+                _ => (),
+            },
+            'B' => match line.nth(1).unwrap() {
+                'X' => total += 0 + 1,
+                'Y' => total += 3 + 2,
+                'Z' => total += 6 + 3,
+                _ => (),
+            },
+            'C' => match line.nth(1).unwrap() {
+                'X' => total += 6 + 1,
+                'Y' => total += 0 + 2,
+                'Z' => total += 3 + 3,
+                _ => (),
+            },
+            _ => (),
+        }
+    }
+    format!("{}",total)
+}
 
 fn day1() -> String {
-    let data: &'static str = include_str!("./day1.txt");
+    let data = include_str!("./day1.txt");
 
-    // This could also be solved as problem2's `sto.iter().max().unwrap()`    
+    // This could also be solved as problem2's `sto.iter().max().unwrap()`
     let problem1 = || {
         let mut biggest = 0;
         let mut curr = 0;
@@ -36,11 +66,12 @@ fn day1() -> String {
                 continue;
             }
             sto.sort();
-            if sto[0] < curr {sto[0] = curr}
-            curr = 0;
-            
+            if sto[0] < curr {
+                sto[0] = curr
             }
-        
+            curr = 0;
+        }
+
         let sol: usize = sto.into_iter().sum();
         format!("Solution to problem #2: {}", sol)
     };
