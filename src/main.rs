@@ -1,42 +1,76 @@
 #![allow(dead_code)]
 
-use std::cmp::max;
+use std::{cmp::max, fmt::format};
 
 fn main() {
-    println!("{}", day2());
+    day2();
 }
 
-fn day2() -> String {
+fn day2() {
+    // A: Rock(1) B: Paper(2) C: scissors(3)
     let data = include_str!("./day2.txt");
 
+    let problem1 = || {
+        let mut total = 0;
+        for i in data.lines() {
+            let mut line = i.chars();
 
-    let mut total = 0;
-    for i in data.lines() {
-        let mut line = i.chars();
-
-        match line.nth(0).unwrap() {
-            'A' => match line.nth(1).unwrap() {
-                'X' => total += 3 + 1,
-                'Y' => total += 6 + 2,
-                'Z' => total += 0 + 3,
+            match line.nth(0).unwrap() {
+                'A' => match line.nth(1).unwrap() {
+                    'X' => total += 3 + 1,
+                    'Y' => total += 6 + 2,
+                    'Z' => total += 0 + 3,
+                    _ => (),
+                },
+                'B' => match line.nth(1).unwrap() {
+                    'X' => total += 0 + 1,
+                    'Y' => total += 3 + 2,
+                    'Z' => total += 6 + 3,
+                    _ => (),
+                },
+                'C' => match line.nth(1).unwrap() {
+                    'X' => total += 6 + 1,
+                    'Y' => total += 0 + 2,
+                    'Z' => total += 3 + 3,
+                    _ => (),
+                },
                 _ => (),
-            },
-            'B' => match line.nth(1).unwrap() {
-                'X' => total += 0 + 1,
-                'Y' => total += 3 + 2,
-                'Z' => total += 6 + 3,
-                _ => (),
-            },
-            'C' => match line.nth(1).unwrap() {
-                'X' => total += 6 + 1,
-                'Y' => total += 0 + 2,
-                'Z' => total += 3 + 3,
-                _ => (),
-            },
-            _ => (),
+            }
         }
-    }
-    format!("{}",total)
+        println!("{}", total)
+    };
+    let problem2 = || {
+        //X: lose Y: draw Z: win
+        let mut total = 0;
+        for i in data.lines() {
+            let mut line = i.chars();
+
+            match line.nth(0).unwrap() {
+                'A' => match line.nth(1).unwrap() {
+                    'X' => total += 0 + 3,
+                    'Y' => total += 3 + 1,
+                    'Z' => total += 6 + 2,
+                    _ => (),
+                },
+                'B' => match line.nth(1).unwrap() {
+                    'X' => total += 0 + 1,
+                    'Y' => total += 3 + 2,
+                    'Z' => total += 6 + 3,
+                    _ => (),
+                },
+                'C' => match line.nth(1).unwrap() {
+                    'X' => total += 0 + 2,
+                    'Y' => total += 3 + 3,
+                    'Z' => total += 6 + 1,
+                    _ => (),
+                },
+                _ => (),
+            }
+        }
+        println!("{}", total)
+    };
+
+    problem2();
 }
 
 fn day1() -> String {
