@@ -1,9 +1,65 @@
 #![allow(dead_code)]
 
-use std::{cmp::max, fmt::format};
+use std::{cmp::max, fmt::format, vec};
 
 fn main() {
-    day2();
+    day3();
+}
+
+
+
+fn day3() {
+    let data = include_str!("./day3.txt");
+
+    let problem1 = || {
+        let res: u32 = data
+            .lines()
+            .map(|line| {
+                let s1 = &line[0..line.len() / 2];
+                let s2 = &line[line.len() / 2..];
+                if s1.len() != s2.len() {
+                    panic!()
+                }
+                let mut a = s1.chars().collect::<Vec<char>>();
+                a.sort_unstable();
+                a.dedup();
+
+                a.iter()
+                    .filter_map(|x| if s2.contains(*x) { Some(*x) } else { None })
+                    .map(transform)
+                    .map(|f| f)
+                    .sum::<u32>()
+            })
+            .sum();
+
+        println!("{}", res);
+    };
+    let problem2 = || {
+        let iter: Vec<&str> = data.lines().collect();
+        let mut accumulator = 0;
+        for i in iter.chunks(3) {
+            for j in i[0].chars() {
+                if i[1].contains(j) && i[2].contains(j) {
+                    accumulator += transform(j);
+                    break;
+                }
+            }
+        }
+
+        println!("{}", accumulator)
+    };
+
+    problem1();
+    problem2();
+
+    fn transform(input: char) -> u32 {
+        let ascii = input as u32;
+        if input.is_ascii_lowercase() {
+            // lowercase
+            return ascii - 0x60;
+        }
+        (ascii - 0x40) + 26
+    }
 }
 
 fn day2() {
@@ -69,7 +125,7 @@ fn day2() {
         }
         println!("{}", total)
     };
-
+    problem1();
     problem2();
 }
 
