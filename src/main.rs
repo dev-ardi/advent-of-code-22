@@ -1,12 +1,45 @@
 #![allow(dead_code)]
 
-use std::{cmp::max, fmt::format, vec};
+use std::{cmp::max, vec};
 
 fn main() {
-    day3();
+    day4();
 }
 
+fn day4() {
+    let data: Vec<Vec<i32>> = include_str!("./day4.txt")
+        .lines()
+        .map(|line| {
+            let mut tmp = String::new();
+            let mut word = Vec::new();
+            for ch in line.chars() {
+                if !ch.is_numeric() {
+                    word.push(tmp.parse().unwrap());
+                    tmp = String::new();
+                } else {
+                    tmp.push(ch)
+                }
+            }
 
+            word.push(tmp.parse().unwrap());
+            word
+        })
+        .collect();
+
+    let problem1 = || {
+        let mut accumulator = 0;
+
+        for word in data {
+            if word[0] <= word[2] && word[1] >= word[3] 
+            || word[0] >= word[2] && word[1] <= word[3]
+            {
+                accumulator += 1;
+            }
+        }
+        dbg!(accumulator);
+    };
+    problem1()
+}
 
 fn day3() {
     let data = include_str!("./day3.txt");
@@ -27,7 +60,6 @@ fn day3() {
                 a.iter()
                     .filter_map(|x| if s2.contains(*x) { Some(*x) } else { None })
                     .map(transform)
-                    .map(|f| f)
                     .sum::<u32>()
             })
             .sum();
@@ -137,7 +169,7 @@ fn day1() -> String {
         let mut biggest = 0;
         let mut curr = 0;
         for i in data.lines() {
-            if i != "" {
+            if !i.is_empty() {
                 curr += i.parse::<usize>().unwrap();
                 continue;
             }
@@ -151,7 +183,7 @@ fn day1() -> String {
         let mut sto: Vec<usize> = vec![0, 0, 0];
         let mut curr = 0;
         for line in data.lines() {
-            if line != "" {
+            if !line.is_empty() {
                 curr += line.parse::<usize>().unwrap();
                 continue;
             }
