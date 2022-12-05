@@ -60,13 +60,10 @@ fn day3() {
             .map(|line| {
                 let s1 = &line[0..line.len() / 2];
                 let s2 = &line[line.len() / 2..];
-                if s1.len() != s2.len() {
-                    panic!()
-                }
+
                 let mut a = s1.chars().collect::<Vec<char>>();
                 a.sort_unstable();
                 a.dedup();
-
                 a.iter()
                     .filter_map(|x| if s2.contains(*x) { Some(*x) } else { None })
                     .map(transform)
