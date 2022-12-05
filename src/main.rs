@@ -29,16 +29,26 @@ fn day4() {
     let problem1 = || {
         let mut accumulator = 0;
 
-        for word in data {
-            if word[0] <= word[2] && word[1] >= word[3] 
-            || word[0] >= word[2] && word[1] <= word[3]
+        for word in &data {
+            if word[0] <= word[2] && word[1] >= word[3] || word[0] >= word[2] && word[1] <= word[3]
             {
                 accumulator += 1;
             }
         }
         dbg!(accumulator);
     };
-    problem1()
+
+    let problem2 = || {
+        let mut accumulator = 0;
+        for word in &data {
+            if word[0] > word[3] || word[1] < word[2] {
+                accumulator += 1;
+            }
+        }
+        println!("{}", data.len() - accumulator);
+    };
+    problem1();
+    problem2();
 }
 
 fn day3() {
