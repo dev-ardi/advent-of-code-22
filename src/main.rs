@@ -1,30 +1,64 @@
 #![allow(dead_code)]
 
-use std::{cmp::max, vec};
+use std::{cmp::max, fmt::Debug, str::FromStr, vec};
 
 fn main() {
-    day4();
+    day5();
+    //day4();
+    //day3();
+    //day2();
+    //day1();
+}
+
+fn day5() {
+    let data: Vec<Vec<usize>> = numberify::<usize>(include_str!("./day5.txt"));
+    let mut hardcoded: Vec<Vec<char>> = vec![
+        vec!['N', 'W', 'B'],
+        vec!['B', 'M', 'D', 'T', 'P', 'S', 'Z', 'L'],
+        vec!['R', 'W', 'Z', 'H', 'Q'],
+        vec!['R', 'Z', 'J', 'V', 'D', 'W'],
+        vec!['B', 'M', 'H', 'S'],
+        vec!['B', 'P', 'V', 'H', 'J', 'N', 'G', 'L'],
+        vec!['S', 'L', 'D', 'H', 'F', 'Z', 'Q', 'J'],
+        vec!['B', 'Q', 'G', 'J', 'F', 'S', 'W'],
+        vec!['J', 'D', 'C', 'S', 'M', 'W', 'Z'],
+    ];
+    //let mut hardcoded = vec![vec!['N', 'Z'], vec!['D', 'C', 'M'], vec!['P']];
+
+    for i in 0..hardcoded.len() {
+        hardcoded[i].reverse();
+    }
+
+    //    let problem1 = || {
+    //for line in data {
+    //let [qty, from, to]: [usize; 3] = line.try_into().unwrap();
+    //for _ in 0..qty {
+    //let x = hardcoded[from - 1].pop().unwrap();
+    //hardcoded[to - 1].push(x);
+    //}
+    //}
+    //let str: String = hardcoded.iter().map(|x| x.last().unwrap()).collect();
+    //println!(" {}", str);
+    //};
+    let problem2 = || {
+        for line in data {
+            let [qty, from, to]: [usize; 3] = line.try_into().unwrap();
+            let mut a = Vec::new();
+            for _ in 0..qty {
+                let x = hardcoded[from - 1].pop().unwrap();
+                a.push(x);
+            }
+            a.reverse();
+            hardcoded[to - 1].append(&mut a);
+        }
+        let str: String = hardcoded.iter().map(|x| x.last().unwrap()).collect();
+        println!(" {}", str);
+    };
+    problem2();
 }
 
 fn day4() {
-    let data: Vec<Vec<i32>> = include_str!("./day4.txt")
-        .lines()
-        .map(|line| {
-            let mut tmp = String::new();
-            let mut word = Vec::new();
-            for ch in line.chars() {
-                if !ch.is_numeric() {
-                    word.push(tmp.parse().unwrap());
-                    tmp = String::new();
-                } else {
-                    tmp.push(ch)
-                }
-            }
-
-            word.push(tmp.parse().unwrap());
-            word
-        })
-        .collect();
+    let data: Vec<Vec<i32>> = numberify(include_str!("./day4.txt"));
 
     let problem1 = || {
         let mut accumulator = 0;
@@ -213,4 +247,29 @@ fn day1() -> String {
         problem1(),
         problem2()
     )
+}
+
+fn numberify<T: std::str::FromStr>(str: &str) -> Vec<Vec<T>>
+where
+    <T as FromStr>::Err: Debug,
+{
+    str.lines()
+        .map(|line| {
+            let mut tmp = String::new();
+            let mut word = Vec::new();
+            for ch in line.chars() {
+                if !ch.is_numeric() {
+                    if !tmp.is_empty() {
+                        word.push(tmp.parse::<T>().unwrap());
+                        tmp = String::new();
+                    }
+                } else {
+                    tmp.push(ch)
+                }
+            }
+
+            word.push(tmp.parse::<T>().unwrap());
+            word
+        })
+        .collect()
 }
