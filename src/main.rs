@@ -1,17 +1,38 @@
 #![allow(dead_code)]
-
 use std::{cmp::max, fmt::Debug, str::FromStr, vec};
 
 fn main() {
-    day5();
+    day6();
+    //day5();
     //day4();
     //day3();
     //day2();
     //day1();
 }
 
+fn day6() {
+    const SEG_LEN: usize = 14; // First problem is 4
+    let data = include_str!("./day6.txt");
+
+
+    let mut res = 0xFFFFFFFF;
+
+    for (index, set) in data.as_bytes().windows(SEG_LEN).enumerate() {
+        let mut set = Vec::from(set);
+        set.sort();
+        let l1 = set.len();
+        set.dedup();
+        if l1 == set.len() {
+            res = index;
+            break;
+        }
+    }
+    println!("{}", res + SEG_LEN)
+}
+
 fn day5() {
     let data: Vec<Vec<usize>> = numberify::<usize>(include_str!("./day5.txt"));
+    // I just hardcoded this in because I don't feel like spending 20 min writing a parser
     let mut hardcoded: Vec<Vec<char>> = vec![
         vec!['N', 'W', 'B'],
         vec!['B', 'M', 'D', 'T', 'P', 'S', 'Z', 'L'],
@@ -23,38 +44,23 @@ fn day5() {
         vec!['B', 'Q', 'G', 'J', 'F', 'S', 'W'],
         vec!['J', 'D', 'C', 'S', 'M', 'W', 'Z'],
     ];
-    //let mut hardcoded = vec![vec!['N', 'Z'], vec!['D', 'C', 'M'], vec!['P']];
 
-    for i in 0..hardcoded.len() {
-        hardcoded[i].reverse();
+    for i in &mut hardcoded {
+        i.reverse(); // OOPS I placed them in reverse order oh well
     }
 
-    //    let problem1 = || {
-    //for line in data {
-    //let [qty, from, to]: [usize; 3] = line.try_into().unwrap();
-    //for _ in 0..qty {
-    //let x = hardcoded[from - 1].pop().unwrap();
-    //hardcoded[to - 1].push(x);
-    //}
-    //}
-    //let str: String = hardcoded.iter().map(|x| x.last().unwrap()).collect();
-    //println!(" {}", str);
-    //};
-    let problem2 = || {
-        for line in data {
-            let [qty, from, to]: [usize; 3] = line.try_into().unwrap();
-            let mut a = Vec::new();
-            for _ in 0..qty {
-                let x = hardcoded[from - 1].pop().unwrap();
-                a.push(x);
-            }
-            a.reverse();
-            hardcoded[to - 1].append(&mut a);
+    for line in data {
+        let [qty, from, to]: [usize; 3] = line.try_into().unwrap();
+        let mut a = Vec::new();
+        for _ in 0..qty {
+            let x = hardcoded[from - 1].pop().unwrap();
+            a.push(x);
         }
-        let str: String = hardcoded.iter().map(|x| x.last().unwrap()).collect();
-        println!(" {}", str);
-    };
-    problem2();
+        a.reverse(); // for problem 1 just comment out this line
+        hardcoded[to - 1].append(&mut a);
+    }
+    let str: String = hardcoded.iter().map(|x| x.last().unwrap()).collect();
+    println!(" {}", str);
 }
 
 fn day4() {
@@ -135,6 +141,15 @@ fn day3() {
     }
 }
 
+/*
+I feel like it's more consistent this way, I don't want to call next() and then 
+nth(1), that's a bit weird. In hindsight I maybe should had parsed the input 
+string better or manually edit it. so that it's easier to work with, like I do 
+in later problems.
+*/
+#[allow(clippy::iter_nth_zero)] 
+
+#[allow(clippy::identity_op)]
 fn day2() {
     // A: Rock(1) B: Paper(2) C: scissors(3)
     let data = include_str!("./day2.txt");
