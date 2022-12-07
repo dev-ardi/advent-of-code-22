@@ -2,7 +2,8 @@
 use std::{cmp::max, fmt::Debug, str::FromStr, vec};
 
 fn main() {
-    day6();
+    day7();
+    //day6();
     //day5();
     //day4();
     //day3();
@@ -10,10 +11,54 @@ fn main() {
     //day1();
 }
 
+fn day7() {
+    let data = include_str!("./day7.txt");
+    let problem1 = || {
+        let mut ac = 0;
+        let mut stack: Vec<usize> = Vec::new();
+        for line in data.lines() {
+            if line == "$ cd .." {
+                let x = stack.pop().expect("`$ cd ..` was found on an empty stack!");
+                if x < 100_000 {
+                    ac += x
+                }
+            } else if line.starts_with("$ cd") {
+                stack.push(0);
+            } else if line.starts_with(|x: char| x.is_numeric()) {
+                let num: usize = line.split(" ").next().unwrap().parse().unwrap();
+
+                stack.iter_mut().for_each(|x| *x += num);
+            }
+        }
+        println!("sol1: {ac}");
+    };
+    let problem2 = || {
+        let mut all: Vec<usize> = Vec::new();
+        let mut stack: Vec<usize> = Vec::new();
+        for line in data.lines() {
+            if line == "$ cd .." {
+                all.push(stack.pop().expect("`$ cd ..` was found on an empty stack!"));
+            } else if line.starts_with("$ cd") {
+                stack.push(0);
+            } else if line.starts_with(|x: char| x.is_numeric()) {
+                let num: usize = line.split(" ").next().unwrap().parse().unwrap();
+
+                stack.iter_mut().for_each(|x| *x += num);
+            }
+        }
+        all.sort_unstable();
+        let needed_space = 40000000 - all.last().unwrap();
+        let smallest = all.iter().rev().find(|x| **x <= needed_space);
+        // this could be sped up with binary search.
+        println!("sol2: {}", smallest.unwrap());
+    };
+    problem1();
+    problem2();
+}
+
 fn day6() {
     const SEG_LEN: usize = 14; // First problem is 4
     let data = include_str!("./day6.txt");
-
 
     let mut res = 0xFFFFFFFF;
 
@@ -142,13 +187,12 @@ fn day3() {
 }
 
 /*
-I feel like it's more consistent this way, I don't want to call next() and then 
-nth(1), that's a bit weird. In hindsight I maybe should had parsed the input 
-string better or manually edit it. so that it's easier to work with, like I do 
+I feel like it's more consistent this way, I don't want to call next() and then
+nth(1), that's a bit weird. In hindsight I maybe should had parsed the input
+string better or manually edit it. so that it's easier to work with, like I do
 in later problems.
 */
-#[allow(clippy::iter_nth_zero)] 
-
+#[allow(clippy::iter_nth_zero)]
 #[allow(clippy::identity_op)]
 fn day2() {
     // A: Rock(1) B: Paper(2) C: scissors(3)
